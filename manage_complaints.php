@@ -74,7 +74,11 @@ $conn->close();
     <header>
         <div class="container header-container">
             <div class="logo">
+<<<<<<< HEAD
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
+=======
+                <i class="fas fa-graduation-cap logo-icon"></i>
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
                 <span>University Complaint System - Admin Panel</span>
             </div>
             <nav>

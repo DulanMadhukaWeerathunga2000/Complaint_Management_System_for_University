@@ -16,7 +16,10 @@ $success = '';
 // Handle complaint submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
+<<<<<<< HEAD
     $faculty = $_POST['faculty'];
+=======
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     $category = $_POST['category'];
     $description = $_POST['description'];
     $priority = $_POST['priority'];
@@ -44,10 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     // Insert complaint
+<<<<<<< HEAD
     $sql = "INSERT INTO complaints (user_id, title, faculty, category, description, priority, attachment_path) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("issssss", $user_id, $title, $faculty, $category, $description, $priority, $attachment_path);
+=======
+    $sql = "INSERT INTO complaints (user_id, title, category, description, priority, attachment_path) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssss", $user_id, $title, $category, $description, $priority, $attachment_path);
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     
     if ($stmt->execute()) {
         $success = "Complaint submitted successfully! Your complaint ID is #" . $conn->insert_id;
@@ -73,7 +83,11 @@ $conn->close();
     <header>
         <div class="container header-container">
             <div class="logo">
+<<<<<<< HEAD
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
+=======
+                <i class="fas fa-graduation-cap logo-icon"></i>
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
                 <span>University Complaint System</span>
             </div>
             <nav>
@@ -110,6 +124,7 @@ $conn->close();
                 </div>
                 
                 <div class="form-group">
+<<<<<<< HEAD
                     <label for="faculty"><i class="fas fa-university"></i> Faculty</label>
                     <select id="faculty" name="faculty" class="form-control" required>
                         <option value="">Select Faculty</option>
@@ -120,6 +135,8 @@ $conn->close();
                 </div>
                 
                 <div class="form-group">
+=======
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
                     <label for="category"><i class="fas fa-tags"></i> Category</label>
                     <select id="category" name="category" class="form-control" required>
                         <option value="">Select Category</option>

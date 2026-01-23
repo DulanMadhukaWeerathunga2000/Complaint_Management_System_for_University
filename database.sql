@@ -19,7 +19,10 @@ CREATE TABLE complaints (
     complaint_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
+<<<<<<< HEAD
     faculty VARCHAR(100) NOT NULL,
+=======
+>>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     category VARCHAR(50) NOT NULL,
     description TEXT NOT NULL,
     status ENUM('pending', 'in_progress', 'resolved', 'rejected') DEFAULT 'pending',
