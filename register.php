@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $full_name = $_POST['full_name'];
     $student_id = $_POST['student_id'];
+    $faculty = $_POST['faculty'];
+    $year = $_POST['year'];
+    $req_num = $_POST['req_num'];
     
     // Check if username already exists
     $check_sql = "SELECT id FROM users WHERE username = ? OR email = ?";
@@ -24,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Username or email already exists!";
     } else {
         // Insert new user
-        $insert_sql = "INSERT INTO users (username, password, email, full_name, student_id, user_type) 
-                      VALUES (?, ?, ?, ?, ?, 'student')";
+        $insert_sql = "INSERT INTO users (username, password, email, full_name, student_id, faculty, year, req_num, user_type) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'student')";
         $insert_stmt = $conn->prepare($insert_sql);
-        $insert_stmt->bind_param("sssss", $username, $password, $email, $full_name, $student_id);
+        $insert_stmt->bind_param("ssssssss", $username, $password, $email, $full_name, $student_id, $faculty, $year, $req_num);
         
         if ($insert_stmt->execute()) {
             $success = "Registration successful! You can now login.";
@@ -55,11 +58,7 @@ $conn->close();
     <header>
         <div class="container header-container">
             <div class="logo">
-<<<<<<< HEAD
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
-=======
-                <i class="fas fa-graduation-cap logo-icon"></i>
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
                 <span>University Complaint System</span>
             </div>
             <nav>
@@ -101,6 +100,37 @@ $conn->close();
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> Email</label>
                     <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty"><i class="fas fa-university"></i> Faculty</label>
+                    <select id="faculty" name="faculty" class="form-control" required>
+                        <option value="">Select Faculty</option>
+                        <option value="Faculty of Technological Studies">Faculty of Technological Studies</option>
+                        <option value="Faculty of Business Studies">Faculty of Business Studies</option>
+                        <option value="Faculty of Applied Sciences">Faculty of Applied Sciences</option>
+                        <option value="Faculty of Humanities">Faculty of Humanities</option>
+                        <option value="Faculty of Medicine">Faculty of Medicine</option>
+                        <option value="Faculty of Engineering">Faculty of Engineering</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year"><i class="fas fa-calendar-alt"></i> Academic Year</label>
+                    <select id="year" name="year" class="form-control" required>
+                        <option value="">Select Year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="5th Year">5th Year</option>
+                        <option value="Graduate">Graduate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="req_num"><i class="fas fa-hashtag"></i> Registration Number</label>
+                    <input type="text" id="req_num" name="req_num" class="form-control">
                 </div>
                 
                 <div class="form-group">

@@ -59,11 +59,7 @@ $conn->close();
     <header>
         <div class="container header-container">
             <div class="logo">
-<<<<<<< HEAD
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
-=======
-                <i class="fas fa-graduation-cap logo-icon"></i>
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
                 <span>University Complaint System</span>
             </div>
         </div>
@@ -105,7 +101,7 @@ $conn->close();
             
             <div class="auth-links">
                 <p>Don't have an account? <a href="register.php">Register as Student</a></p>
-                <p>Demo Admin: username: <strong>admin</strong>, password: <strong>admin123</strong></p>
+                
             </div>
         </div>
     </div>
@@ -113,7 +109,7 @@ $conn->close();
     <footer>
         <div class="container">
             <p>&copy; <?php echo date('Y'); ?> University Complaint Management System | Group 10</p>
-            <p>Project by: Shehara R.K.A.V.N., Bandara P.K.I.S., Weerathunga D.M., Nasil A.H.M., Mr. T.D.L.S. Jayasingha</p>
+            <p>Project by: Shehara R.K.A.V.N., Bandara P.K.I.S., Weerathunga D.M., Nasil A.H.M.,  T.D.L.S. Jayasingha</p>
         </div>
     </footer>
 </body>

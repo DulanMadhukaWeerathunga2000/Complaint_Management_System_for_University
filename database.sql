@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS complaint_system;
 USE complaint_system;
 
--- Users table (students and admins)
+-- Users table (students and admins) with all columns
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -10,6 +10,9 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     student_id VARCHAR(20),
+    faculty VARCHAR(100),
+    year VARCHAR(20),
+    req_num VARCHAR(50),
     user_type ENUM('student', 'admin') DEFAULT 'student',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -19,10 +22,6 @@ CREATE TABLE complaints (
     complaint_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
-<<<<<<< HEAD
-    faculty VARCHAR(100) NOT NULL,
-=======
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     category VARCHAR(50) NOT NULL,
     description TEXT NOT NULL,
     status ENUM('pending', 'in_progress', 'resolved', 'rejected') DEFAULT 'pending',
@@ -45,5 +44,7 @@ CREATE TABLE complaint_responses (
 );
 
 -- Insert a default admin (password: admin123)
+-- Generate hash using: echo password_hash('admin123', PASSWORD_DEFAULT);
+-- Example hash: $2y$10$B8ZV4xjD5KrVxgE3jN9kQ.SGZOjQKxKzFk0LZzJN0q2C8XvR5pL6e
 INSERT INTO users (username, password, email, full_name, user_type) 
-VALUES ('admin', '$2y$10$YourHashedPasswordHere', 'admin@university.lk', 'System Administrator', 'admin');
+VALUES ('admin', '$2y$10$B8ZV4xjD5KrVxgE3jN9kQ.SGZOjQKxKzFk0LZzJN0q2C8XvR5pL6e', 'admin@university.lk', 'System Administrator', 'admin');

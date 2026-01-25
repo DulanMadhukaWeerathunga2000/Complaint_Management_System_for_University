@@ -45,7 +45,6 @@ header {
     font-size: 2rem;
 }
 
-<<<<<<< HEAD
 .logo-img {
     height: 1.8rem;
     width: auto;
@@ -53,8 +52,6 @@ header {
     vertical-align: middle;
 }
 
-=======
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
 nav ul {
     display: flex;
     list-style: none;
@@ -356,28 +353,15 @@ footer {
         flex-direction: column;
         text-align: center;
     }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     nav ul {
         margin-top: 15px;
         justify-content: center;
     }
-<<<<<<< HEAD
 
     nav ul li {
         margin: 0 10px;
     }
 
-=======
-    
-    nav ul li {
-        margin: 0 10px;
-    }
-    
->>>>>>> 7c4024f80d6443629376d0d22a61c3d00caf73d9
     .stats-container {
         grid-template-columns: 1fr;
     }
