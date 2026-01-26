@@ -1,11 +1,16 @@
 <?php
+// Start session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Database configuration
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'complaint_system');
 
-// Create connection
+// Function to get database connection
 function getDBConnection() {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     
@@ -16,7 +21,4 @@ function getDBConnection() {
     
     return $conn;
 }
-
-// Start session
-session_start();
 ?>

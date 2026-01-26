@@ -1,9 +1,8 @@
--- Create database
 CREATE DATABASE IF NOT EXISTS complaint_system;
 USE complaint_system;
 
--- Users table (students and admins) with all columns
-CREATE TABLE users (
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -18,8 +17,8 @@ CREATE TABLE users (
 );
 
 -- Complaints table
-CREATE TABLE complaints (
-    complaint_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS complaints (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
     category VARCHAR(50) NOT NULL,
@@ -32,19 +31,17 @@ CREATE TABLE complaints (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Admin responses table
-CREATE TABLE complaint_responses (
-    response_id INT AUTO_INCREMENT PRIMARY KEY,
+-- Complaint responses table
+CREATE TABLE IF NOT EXISTS complaint_responses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     complaint_id INT NOT NULL,
     admin_id INT NOT NULL,
     response TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (complaint_id) REFERENCES complaints(complaint_id) ON DELETE CASCADE,
+    FOREIGN KEY (complaint_id) REFERENCES complaints(id) ON DELETE CASCADE,
     FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insert a default admin (password: admin123)
--- Generate hash using: echo password_hash('admin123', PASSWORD_DEFAULT);
--- Example hash: $2y$10$B8ZV4xjD5KrVxgE3jN9kQ.SGZOjQKxKzFk0LZzJN0q2C8XvR5pL6e
+-- Insert default admin (password: admin123 - hashed)
 INSERT INTO users (username, password, email, full_name, user_type) 
-VALUES ('admin', '$2y$10$B8ZV4xjD5KrVxgE3jN9kQ.SGZOjQKxKzFk0LZzJN0q2C8XvR5pL6e', 'admin@university.lk', 'System Administrator', 'admin');
+VALUES ('admin', '$2y$10$YourHashedPasswordHere', 'admin@university.edu', 'System Administrator', 'admin');

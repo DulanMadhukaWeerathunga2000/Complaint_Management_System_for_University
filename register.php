@@ -5,10 +5,10 @@ $conn = getDBConnection();
 $error = '';
 $success = '';
 
-// Handle registration
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
     $email = $_POST['email'];
     $full_name = $_POST['full_name'];
     $student_id = $_POST['student_id'];
@@ -16,32 +16,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $year = $_POST['year'];
     $req_num = $_POST['req_num'];
     
-    // Check if username already exists
-    $check_sql = "SELECT id FROM users WHERE username = ? OR email = ?";
-    $check_stmt = $conn->prepare($check_sql);
-    $check_stmt->bind_param("ss", $username, $email);
-    $check_stmt->execute();
-    $check_result = $check_stmt->get_result();
-    
-    if ($check_result->num_rows > 0) {
-        $error = "Username or email already exists!";
+    if ($password !== $confirm_password) {
+        $error = "Passwords do not match!";
     } else {
-        // Insert new user
-        $insert_sql = "INSERT INTO users (username, password, email, full_name, student_id, faculty, year, req_num, user_type) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'student')";
-        $insert_stmt = $conn->prepare($insert_sql);
-        $insert_stmt->bind_param("ssssssss", $username, $password, $email, $full_name, $student_id, $faculty, $year, $req_num);
+        // Check if username/email exists
+        $check_sql = "SELECT id FROM users WHERE username = ? OR email = ?";
+        $check_stmt = $conn->prepare($check_sql);
+        $check_stmt->bind_param("ss", $username, $email);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
         
-        if ($insert_stmt->execute()) {
-            $success = "Registration successful! You can now login.";
+        if ($check_result->num_rows > 0) {
+            $error = "Username or email already exists!";
         } else {
-            $error = "Registration failed. Please try again.";
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $insert_sql = "INSERT INTO users (username, password, email, full_name, student_id, faculty, year, req_num, user_type) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'student')";
+            $insert_stmt = $conn->prepare($insert_sql);
+            $insert_stmt->bind_param("ssssssss", $username, $hashed_password, $email, $full_name, $student_id, $faculty, $year, $req_num);
+            
+            if ($insert_stmt->execute()) {
+                $success = "Registration successful! You can now login.";
+            } else {
+                $error = "Registration failed. Please try again.";
+            }
+            
+            $insert_stmt->close();
         }
         
-        $insert_stmt->close();
+        $check_stmt->close();
     }
-    
-    $check_stmt->close();
 }
 $conn->close();
 ?>
@@ -50,7 +54,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Management System - Register</title>
+    <title>Student Registration</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -59,7 +63,7 @@ $conn->close();
         <div class="container header-container">
             <div class="logo">
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
-                <span>University Complaint System</span>
+                <span>Student Registration</span>
             </div>
             <nav>
                 <ul>
@@ -72,18 +76,14 @@ $conn->close();
     
     <div class="container auth-container">
         <div class="auth-box">
-            <h2 class="auth-title"><i class="fas fa-user-plus"></i> Student Registration</h2>
+            <h2 class="auth-title"><i class="fas fa-user-graduate"></i> Student Registration</h2>
             
             <?php if ($error): ?>
-                <div class="alert alert-error">
-                    <?php echo $error; ?>
-                </div>
+                <div class="alert alert-error"><?php echo $error; ?></div>
             <?php endif; ?>
             
             <?php if ($success): ?>
-                <div class="alert alert-success">
-                    <?php echo $success; ?>
-                </div>
+                <div class="alert alert-success"><?php echo $success; ?></div>
             <?php endif; ?>
             
             <form method="POST" action="">
@@ -106,12 +106,9 @@ $conn->close();
                     <label for="faculty"><i class="fas fa-university"></i> Faculty</label>
                     <select id="faculty" name="faculty" class="form-control" required>
                         <option value="">Select Faculty</option>
-                        <option value="Faculty of Technological Studies">Faculty of Technological Studies</option>
-                        <option value="Faculty of Business Studies">Faculty of Business Studies</option>
-                        <option value="Faculty of Applied Sciences">Faculty of Applied Sciences</option>
-                        <option value="Faculty of Humanities">Faculty of Humanities</option>
-                        <option value="Faculty of Medicine">Faculty of Medicine</option>
-                        <option value="Faculty of Engineering">Faculty of Engineering</option>
+                        <option value="Faculty of Technology">Faculty of Technology</option>
+                        <option value="Faculty of Business">Faculty of Business</option>
+                        <option value="Faculty of Science">Faculty of Science</option>
                     </select>
                 </div>
                 
@@ -123,8 +120,6 @@ $conn->close();
                         <option value="2nd Year">2nd Year</option>
                         <option value="3rd Year">3rd Year</option>
                         <option value="4th Year">4th Year</option>
-                        <option value="5th Year">5th Year</option>
-                        <option value="Graduate">Graduate</option>
                     </select>
                 </div>
                 
@@ -144,6 +139,11 @@ $conn->close();
                 </div>
                 
                 <div class="form-group">
+                    <label for="confirm_password"><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
                     <button type="submit" class="btn btn-success" style="width: 100%;">
                         <i class="fas fa-user-plus"></i> Register
                     </button>
@@ -158,7 +158,7 @@ $conn->close();
     
     <footer>
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System | Group 10</p>
+            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System</p>
         </div>
     </footer>
 </body>

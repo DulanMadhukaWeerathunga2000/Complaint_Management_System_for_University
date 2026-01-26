@@ -1,16 +1,14 @@
 <?php
+session_start();
 require_once 'config/database.php';
 $conn = getDBConnection();
 
 $error = '';
-$success = '';
 
-// Handle login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    // Validate credentials
     $sql = "SELECT * FROM users WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -20,15 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         
-        // Verify password
         if (password_verify($password, $user['password'])) {
-            // Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['user_type'] = $user['user_type'];
             $_SESSION['full_name'] = $user['full_name'];
             
-            // Redirect based on user type
             if ($user['user_type'] == 'admin') {
                 header("Location: admin_dashboard.php");
             } else {
@@ -51,7 +46,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Management System - Login</title>
+    <title>Login - Complaint System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -62,6 +57,12 @@ $conn->close();
                 <img src="css/uniLogoi.png" alt="University Logo" class="logo-img">
                 <span>University Complaint System</span>
             </div>
+            <nav>
+                <ul>
+                    <li><a href="register.php"><i class="fas fa-user-plus"></i> Student Register</a></li>
+                    <li><a href="admin_register.php"><i class="fas fa-user-shield"></i> Admin Register</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
     
@@ -70,15 +71,7 @@ $conn->close();
             <h2 class="auth-title"><i class="fas fa-sign-in-alt"></i> Login</h2>
             
             <?php if ($error): ?>
-                <div class="alert alert-error">
-                    <?php echo $error; ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if ($success): ?>
-                <div class="alert alert-success">
-                    <?php echo $success; ?>
-                </div>
+                <div class="alert alert-error"><?php echo $error; ?></div>
             <?php endif; ?>
             
             <form method="POST" action="">
@@ -100,16 +93,15 @@ $conn->close();
             </form>
             
             <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Register as Student</a></p>
-                
+                <p>New Student? <a href="register.php">Register Here</a></p>
+                <p>New Admin? <a href="admin_register.php">Admin Registration</a></p>
             </div>
         </div>
     </div>
     
     <footer>
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System | Group 10</p>
-            <p>Project by: Shehara R.K.A.V.N., Bandara P.K.I.S., Weerathunga D.M., Nasil A.H.M.,  T.D.L.S. Jayasingha</p>
+            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System</p>
         </div>
     </footer>
 </body>

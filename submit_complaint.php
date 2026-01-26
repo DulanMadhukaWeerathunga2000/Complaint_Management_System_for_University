@@ -13,17 +13,16 @@ $user_id = $_SESSION['user_id'];
 $error = '';
 $success = '';
 
-// Handle complaint submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
     $category = $_POST['category'];
     $description = $_POST['description'];
     $priority = $_POST['priority'];
+    $attachment_path = null;
     
     // Handle file upload
-    $attachment_path = null;
     if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] == 0) {
-        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'application/msword'];
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
         $max_size = 5 * 1024 * 1024; // 5MB
         
         if (in_array($_FILES['attachment']['type'], $allowed_types) && $_FILES['attachment']['size'] <= $max_size) {
@@ -49,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("isssss", $user_id, $title, $category, $description, $priority, $attachment_path);
     
     if ($stmt->execute()) {
-        $success = "Complaint submitted successfully! Your complaint ID is #" . $conn->insert_id;
+        $success = "Complaint submitted successfully! Complaint ID: #" . $conn->insert_id;
     } else {
         $error = "Failed to submit complaint. Please try again.";
     }
@@ -64,7 +63,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Complaint - Complaint Management System</title>
+    <title>Submit Complaint</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -78,6 +77,7 @@ $conn->close();
             <nav>
                 <ul>
                     <li><a href="student_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="my_complaints.php"><i class="fas fa-list"></i> My Complaints</a></li>
                     <li><a href="submit_complaint.php"><i class="fas fa-plus-circle"></i> New Complaint</a></li>
                     <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
@@ -90,22 +90,17 @@ $conn->close();
             <h2><i class="fas fa-plus-circle"></i> Submit New Complaint</h2>
             
             <?php if ($error): ?>
-                <div class="alert alert-error">
-                    <?php echo $error; ?>
-                </div>
+                <div class="alert alert-error"><?php echo $error; ?></div>
             <?php endif; ?>
             
             <?php if ($success): ?>
-                <div class="alert alert-success">
-                    <?php echo $success; ?>
-                </div>
+                <div class="alert alert-success"><?php echo $success; ?></div>
             <?php endif; ?>
             
             <form method="POST" action="" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="title"><i class="fas fa-heading"></i> Complaint Title</label>
-                    <input type="text" id="title" name="title" class="form-control" required 
-                           placeholder="Brief title of your complaint">
+                    <label for="title"><i class="fas fa-heading"></i> Title</label>
+                    <input type="text" id="title" name="title" class="form-control" required placeholder="Enter complaint title">
                 </div>
                 
                 <div class="form-group">
@@ -113,7 +108,6 @@ $conn->close();
                     <select id="category" name="category" class="form-control" required>
                         <option value="">Select Category</option>
                         <option value="Academic">Academic</option>
-                        <option value="Administrative">Administrative</option>
                         <option value="Facilities">Facilities</option>
                         <option value="Hostel">Hostel</option>
                         <option value="Library">Library</option>
@@ -134,14 +128,13 @@ $conn->close();
                 
                 <div class="form-group">
                     <label for="description"><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="description" name="description" class="form-control" required 
-                              placeholder="Provide detailed description of your complaint..."></textarea>
+                    <textarea id="description" name="description" class="form-control" required rows="5" placeholder="Describe your complaint in detail..."></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="attachment"><i class="fas fa-paperclip"></i> Attachment (Optional)</label>
                     <input type="file" id="attachment" name="attachment" class="form-control">
-                    <small>Max file size: 5MB. Allowed: images, PDF, Word documents</small>
+                    <small>Max 5MB. Allowed: Images, PDF</small>
                 </div>
                 
                 <div class="form-group">
@@ -150,15 +143,6 @@ $conn->close();
                     </button>
                 </div>
             </form>
-            <nav>
-    <ul>
-        <li><a href="student_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="my_complaints.php"><i class="fas fa-list"></i> My Complaints</a></li>
-        <li><a href="submit_complaint.php"><i class="fas fa-plus-circle"></i> New Complaint</a></li>
-        <li><a href="profile.php"><i class="fas fa-user-edit"></i> Profile</a></li>
-        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
-</nav>
             
             <div style="text-align: center; margin-top: 20px;">
                 <a href="student_dashboard.php" class="btn">
@@ -170,7 +154,7 @@ $conn->close();
     
     <footer>
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System | Group 10</p>
+            <p>&copy; <?php echo date('Y'); ?> University Complaint Management System</p>
         </div>
     </footer>
 </body>
